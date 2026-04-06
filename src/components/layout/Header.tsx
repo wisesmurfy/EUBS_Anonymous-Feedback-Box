@@ -1,0 +1,41 @@
+import Image from "next/image";
+import Link from "next/link";
+
+interface HeaderProps {
+  showNav?: boolean;
+}
+
+export function Header({ showNav = true }: HeaderProps) {
+  return (
+    <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ewha-700">
+            <span className="text-xs font-bold text-white">E</span>
+          </div>
+          <div>
+            <p className="text-sm font-bold leading-none tracking-tight text-ewha-700">EUBS</p>
+            <p className="text-[10px] leading-none text-gray-400">익명 소리함</p>
+          </div>
+        </Link>
+
+        {showNav && (
+          <nav className="flex items-center gap-1">
+            <Link
+              href="/submit"
+              className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-ewha-50 hover:text-ewha-700 transition-colors"
+            >
+              소리함
+            </Link>
+            <Link
+              href="/proposals/submit"
+              className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-ewha-50 hover:text-ewha-700 transition-colors"
+            >
+              기획안
+            </Link>
+          </nav>
+        )}
+      </div>
+    </header>
+  );
+}
