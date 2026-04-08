@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ProposalStatusBadge } from "@/components/ui/Badge";
 import { ProposalFeedbackEditor } from "./ProposalFeedbackEditor";
-import { formatDateTime } from "@/lib/utils/format";
+import { formatDateTime, formatDate } from "@/lib/utils/format";
 import { PROGRAM_TYPE_LABELS, type ProgramType, type ProposalStatus, type FeedbackSection } from "@/lib/types";
 
 export default async function AdminProposalDetailPage({
@@ -46,24 +46,49 @@ export default async function AdminProposalDetailPage({
       </Link>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-        {/* 기획안 내용 */}
+        {/* 기획안 정보 */}
         <div className="lg:col-span-2 space-y-4">
           <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <ProposalStatusBadge status={proposal.status as ProposalStatus} />
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+              <span className="rounded-full bg-ewha-50 px-2 py-0.5 text-xs font-medium text-ewha-700">
                 {PROGRAM_TYPE_LABELS[proposal.program_type as ProgramType]}
               </span>
             </div>
+
             <h1 className="mb-1 text-lg font-bold text-gray-900">{proposal.title}</h1>
-            <p className="mb-4 text-sm text-gray-500">
-              {proposal.submitter_name} · {formatDateTime(proposal.created_at)}
-            </p>
-            <div className="border-t border-gray-100 pt-4">
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-                {proposal.content}
-              </p>
+
+            <div className="mb-4 space-y-1.5">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-400 w-16 shrink-0">제출자</span>
+                <span className="font-medium text-gray-800">{proposal.submitter_name}</span>
+              </div>
+              {proposal.broadcast_date && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-gray-400 w-16 shrink-0">방송 날짜</span>
+                  <span className="font-medium text-gray-800">{formatDate(proposal.broadcast_date)}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-400 w-16 shrink-0">등록일</span>
+                <span className="text-gray-600">{formatDateTime(proposal.created_at)}</span>
+              </div>
+              {proposal.submitter_email && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-gray-400 w-16 shrink-0">이메일</span>
+                  <span className="text-gray-600 text-xs">{proposal.submitter_email}</span>
+                </div>
+              )}
             </div>
+
+            {proposal.content && (
+              <div className="border-t border-gray-100 pt-4">
+                <p className="mb-1.5 text-xs font-semibold text-gray-500">기획안 메모</p>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                  {proposal.content}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -71,6 +96,7 @@ export default async function AdminProposalDetailPage({
         <div className="lg:col-span-3">
           <ProposalFeedbackEditor
             proposalId={id}
+            hasEmail={!!proposal.submitter_email}
             existingFeedback={
               existingFeedback
                 ? {

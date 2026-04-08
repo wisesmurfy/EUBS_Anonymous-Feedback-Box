@@ -69,10 +69,10 @@ export interface AdminActivityLog {
 }
 
 // =====================================================
-// Proposal (기획안)
+// Proposal (기획안) — 국부국이 어드민에서 직접 등록
 // =====================================================
 
-export type ProgramType = "radio" | "tv" | "online" | "event" | "other";
+export type ProgramType = "뉴스" | "대담" | "예능" | "시사교양" | "기타";
 
 export type ProposalStatus = "pending" | "reviewed" | "approved" | "rejected";
 
@@ -81,8 +81,9 @@ export interface Proposal {
   title: string;
   program_type: ProgramType;
   submitter_name: string;
-  submitter_email: string;
-  content: string;
+  submitter_email: string | null;
+  content: string | null;
+  broadcast_date: string | null;
   view_token: string;
   status: ProposalStatus;
   created_at: string;
@@ -95,8 +96,9 @@ export interface ProposalInsert {
   title: string;
   program_type: ProgramType;
   submitter_name: string;
-  submitter_email: string;
-  content: string;
+  submitter_email?: string;
+  content?: string;
+  broadcast_date?: string;
 }
 
 export interface FeedbackSection {
@@ -116,6 +118,30 @@ export interface ProposalFeedback {
   updated_at: string;
   // Joined
   admin_profiles?: { display_name: string };
+}
+
+// =====================================================
+// Proposal Q&A (기획안 질문함)
+// =====================================================
+
+export type QuestionerRole = "기자" | "PD" | "기타";
+
+export interface ProposalQuestion {
+  id: string;
+  questioner_name: string;
+  questioner_role: QuestionerRole;
+  content: string;
+  created_at: string;
+  // Joined
+  proposal_question_replies?: ProposalQuestionReply[];
+}
+
+export interface ProposalQuestionReply {
+  id: string;
+  question_id?: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
 }
 
 // =====================================================
@@ -150,16 +176,24 @@ export const REPORT_CATEGORY_LABELS: Record<ReportCategory, string> = {
 };
 
 export const PROGRAM_TYPE_LABELS: Record<ProgramType, string> = {
-  radio: "라디오",
-  tv: "TV",
-  online: "온라인/SNS",
-  event: "이벤트",
-  other: "기타",
+  "뉴스": "뉴스",
+  "대담": "대담",
+  "예능": "예능",
+  "시사교양": "시사교양",
+  "기타": "기타",
 };
+
+export const PROGRAM_TYPES: ProgramType[] = ["뉴스", "대담", "예능", "시사교양", "기타"];
 
 export const PROPOSAL_STATUS_LABELS: Record<ProposalStatus, string> = {
   pending: "검토 대기",
   reviewed: "검토 완료",
   approved: "승인",
   rejected: "반려",
+};
+
+export const QUESTIONER_ROLE_LABELS: Record<QuestionerRole, string> = {
+  "기자": "기자",
+  "PD": "PD",
+  "기타": "기타",
 };

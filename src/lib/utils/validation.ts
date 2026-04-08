@@ -15,12 +15,14 @@ export const submissionSchema = z.object({
   path: ["answer_email"],
 });
 
+// 국부국이 어드민에서 기획안을 직접 등록할 때 사용
 export const proposalSchema = z.object({
   title: z.string().min(2, "제목을 입력해주세요.").max(100, "제목은 100자 이내로 입력해주세요."),
-  program_type: z.enum(["radio", "tv", "online", "event", "other"]),
-  submitter_name: z.string().min(1, "이름을 입력해주세요.").max(50),
-  submitter_email: z.string().email("올바른 이메일 주소를 입력해주세요."),
-  content: z.string().min(50, "기획안 내용을 최소 50자 이상 입력해주세요.").max(10000, "최대 10,000자까지 입력 가능합니다."),
+  program_type: z.enum(["뉴스", "대담", "예능", "시사교양", "기타"]),
+  submitter_name: z.string().min(1, "기획안 제출자 이름을 입력해주세요.").max(50),
+  submitter_email: z.string().email("올바른 이메일 주소를 입력해주세요.").optional().or(z.literal("")),
+  content: z.string().max(10000, "최대 10,000자까지 입력 가능합니다.").optional(),
+  broadcast_date: z.string().optional(),
 });
 
 export const proposalFeedbackSchema = z.object({
@@ -41,6 +43,20 @@ export const statusUpdateSchema = z.object({
   status: z.enum(["unread", "read", "in_progress", "resolved"]),
 });
 
+// Q&A 질문 스키마 (국원이 공개 게시판에 질문)
+export const questionSchema = z.object({
+  questioner_name: z.string().min(1, "이름을 입력해주세요.").max(50),
+  questioner_role: z.enum(["기자", "PD", "기타"]),
+  content: z.string().min(5, "질문 내용을 5자 이상 입력해주세요.").max(2000, "최대 2000자까지 입력 가능합니다."),
+});
+
+// Q&A 답변 스키마 (국부국 어드민)
+export const questionReplySchema = z.object({
+  content: z.string().min(1, "답변 내용을 입력해주세요.").max(2000, "최대 2000자까지 입력 가능합니다."),
+});
+
 export type SubmissionInput = z.infer<typeof submissionSchema>;
 export type ProposalInput = z.infer<typeof proposalSchema>;
 export type ProposalFeedbackInput = z.infer<typeof proposalFeedbackSchema>;
+export type QuestionInput = z.infer<typeof questionSchema>;
+export type QuestionReplyInput = z.infer<typeof questionReplySchema>;

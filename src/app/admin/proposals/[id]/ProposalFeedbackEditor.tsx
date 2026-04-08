@@ -15,6 +15,7 @@ const DEFAULT_SECTIONS: FeedbackSection[] = [
 
 interface ProposalFeedbackEditorProps {
   proposalId: string;
+  hasEmail: boolean;
   existingFeedback: {
     sections: FeedbackSection[];
     overall_comment: string;
@@ -23,6 +24,7 @@ interface ProposalFeedbackEditorProps {
 
 export function ProposalFeedbackEditor({
   proposalId,
+  hasEmail,
   existingFeedback,
 }: ProposalFeedbackEditorProps) {
   const router = useRouter();
@@ -131,25 +133,27 @@ export function ProposalFeedbackEditor({
         />
       </div>
 
-      {/* 이메일 알림 옵션 */}
-      <div className="mt-4 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => setNotifySubmitter(!notifySubmitter)}
-          className={cn(
-            "relative inline-flex h-5 w-9 items-center rounded-full transition-colors",
-            notifySubmitter ? "bg-ewha-700" : "bg-gray-200"
-          )}
-        >
-          <span
+      {/* 이메일 알림 옵션 — 이메일이 있을 때만 표시 */}
+      {hasEmail && (
+        <div className="mt-4 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setNotifySubmitter(!notifySubmitter)}
             className={cn(
-              "inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform",
-              notifySubmitter ? "translate-x-4.5" : "translate-x-0.5"
+              "relative inline-flex h-5 w-9 items-center rounded-full transition-colors",
+              notifySubmitter ? "bg-ewha-700" : "bg-gray-200"
             )}
-          />
-        </button>
-        <span className="text-xs text-gray-600">저장 시 제출자에게 이메일 알림 발송</span>
-      </div>
+          >
+            <span
+              className={cn(
+                "inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform",
+                notifySubmitter ? "translate-x-4.5" : "translate-x-0.5"
+              )}
+            />
+          </button>
+          <span className="text-xs text-gray-600">저장 시 제출자에게 이메일 알림 발송</span>
+        </div>
+      )}
 
       <div className="mt-4 flex items-center gap-2">
         <Button

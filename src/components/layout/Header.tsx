@@ -28,10 +28,10 @@ export function Header({ showNav = true }: HeaderProps) {
               소리함
             </Link>
             <Link
-              href="/proposals/submit"
+              href="/proposals/questions"
               className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-ewha-50 hover:text-ewha-700 transition-colors"
             >
-              기획안
+              기획안 Q&A
             </Link>
           </nav>
         )}

@@ -40,6 +40,22 @@ export function AdminSidebar({ displayName }: AdminSidebarProps) {
             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       ),
+      exact: false,
+      // 질문함은 별도 아이템이므로 기획안 메뉴는 /admin/proposals/questions 는 제외
+      activeCheck: (path: string) =>
+        path.startsWith("/admin/proposals") && !path.startsWith("/admin/proposals/questions"),
+    },
+    {
+      href: "/admin/proposals/questions",
+      label: "기획안 Q&A",
+      icon: (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      exact: false,
+      activeCheck: (path: string) => path.startsWith("/admin/proposals/questions"),
     },
     {
       href: "/admin/settings",
@@ -51,6 +67,7 @@ export function AdminSidebar({ displayName }: AdminSidebarProps) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       ),
+      exact: true,
     },
   ];
 
@@ -70,7 +87,9 @@ export function AdminSidebar({ displayName }: AdminSidebarProps) {
       {/* Nav */}
       <nav className="flex-1 p-2">
         {navItems.map((item) => {
-          const isActive = item.exact
+          const isActive = item.activeCheck
+            ? item.activeCheck(pathname)
+            : item.exact
             ? pathname === item.href
             : pathname.startsWith(item.href);
           return (

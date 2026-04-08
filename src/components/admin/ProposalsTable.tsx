@@ -4,14 +4,14 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ProposalStatusBadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { formatRelativeTime } from "@/lib/utils/format";
+import { formatDate, formatRelativeTime } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { PROGRAM_TYPE_LABELS, type Proposal, type ProposalStatus, type ProgramType } from "@/lib/types";
 
 const STATUS_FILTERS = [
   { value: "all", label: "전체" },
-  { value: "pending", label: "검토 대기" },
-  { value: "reviewed", label: "검토 완료" },
+  { value: "pending", label: "피드백 대기" },
+  { value: "reviewed", label: "피드백 완료" },
   { value: "approved", label: "승인" },
   { value: "rejected", label: "반려" },
 ];
@@ -75,8 +75,9 @@ export function ProposalsTable() {
                 <th className="px-4 py-3">제목</th>
                 <th className="px-4 py-3 hidden sm:table-cell">유형</th>
                 <th className="px-4 py-3">제출자</th>
+                <th className="px-4 py-3 hidden md:table-cell">방송 날짜</th>
                 <th className="px-4 py-3">상태</th>
-                <th className="px-4 py-3 hidden md:table-cell">제출일</th>
+                <th className="px-4 py-3 hidden lg:table-cell">등록일</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -90,17 +91,22 @@ export function ProposalsTable() {
                     <p className="text-sm font-medium text-gray-900">{p.title}</p>
                   </td>
                   <td className="px-4 py-3 hidden sm:table-cell">
-                    <span className="text-xs text-gray-500">
+                    <span className="rounded-full bg-ewha-50 px-2 py-0.5 text-xs text-ewha-700">
                       {PROGRAM_TYPE_LABELS[p.program_type as ProgramType]}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-sm text-gray-600">{p.submitter_name}</span>
                   </td>
+                  <td className="px-4 py-3 hidden md:table-cell">
+                    <span className="text-xs text-gray-500">
+                      {p.broadcast_date ? formatDate(p.broadcast_date) : "—"}
+                    </span>
+                  </td>
                   <td className="px-4 py-3">
                     <ProposalStatusBadge status={p.status as ProposalStatus} />
                   </td>
-                  <td className="px-4 py-3 hidden md:table-cell">
+                  <td className="px-4 py-3 hidden lg:table-cell">
                     <span className="text-xs text-gray-400">{formatRelativeTime(p.created_at)}</span>
                   </td>
                 </tr>
