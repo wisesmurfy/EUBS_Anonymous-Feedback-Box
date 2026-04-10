@@ -197,3 +197,14 @@ export const QUESTIONER_ROLE_LABELS: Record<QuestionerRole, string> = {
   "PD": "PD",
   "기타": "기타",
 };
+
+// =====================================================
+// AllowedSubmitter (Q&A 질문 허용 계정)
+// =====================================================
+
+export interface AllowedSubmitter {
+  id: string;
+  email: string;
+  name: string | null;
+  created_at: string;
+}

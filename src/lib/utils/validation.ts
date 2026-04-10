@@ -43,10 +43,11 @@ export const statusUpdateSchema = z.object({
   status: z.enum(["unread", "read", "in_progress", "resolved"]),
 });
 
-// Q&A 질문 스키마 (국원이 공개 게시판에 질문)
+// Q&A 질문 스키마 (허용된 계정만 질문 가능)
 export const questionSchema = z.object({
   questioner_name: z.string().min(1, "이름을 입력해주세요.").max(50),
   questioner_role: z.enum(["기자", "PD", "기타"]),
+  email: z.string().email("올바른 이메일 주소를 입력해주세요."),
   content: z.string().min(5, "질문 내용을 5자 이상 입력해주세요.").max(2000, "최대 2000자까지 입력 가능합니다."),
 });
 
@@ -59,4 +60,5 @@ export type SubmissionInput = z.infer<typeof submissionSchema>;
 export type ProposalInput = z.infer<typeof proposalSchema>;
 export type ProposalFeedbackInput = z.infer<typeof proposalFeedbackSchema>;
 export type QuestionInput = z.infer<typeof questionSchema>;
+export type AllowedSubmitterInput = { email: string; name?: string };
 export type QuestionReplyInput = z.infer<typeof questionReplySchema>;

@@ -14,6 +14,7 @@ export function QuestionBoard() {
 
   // 질문 폼 상태
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [role, setRole] = useState<QuestionerRole>("기자");
   const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -37,6 +38,7 @@ export function QuestionBoard() {
     setFormError(null);
 
     if (!name.trim()) { setFormError("이름을 입력해주세요."); return; }
+    if (!email.trim()) { setFormError("이메일을 입력해주세요."); return; }
     if (content.trim().length < 5) { setFormError("질문 내용을 5자 이상 입력해주세요."); return; }
 
     setSubmitting(true);
@@ -47,6 +49,7 @@ export function QuestionBoard() {
         body: JSON.stringify({
           questioner_name: name.trim(),
           questioner_role: role,
+          email: email.trim(),
           content: content.trim(),
         }),
       });
@@ -55,6 +58,7 @@ export function QuestionBoard() {
       if (!res.ok) { setFormError(data.error ?? "제출 중 오류가 발생했습니다."); return; }
 
       setName("");
+      setEmail("");
       setContent("");
       setRole("기자");
       setSubmitted(true);
@@ -106,6 +110,19 @@ export function QuestionBoard() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* 이메일 */}
+        <div className="mb-3">
+          <label className="mb-1 block text-xs font-medium text-gray-500">이메일</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="국부국에 등록된 이메일 주소"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm placeholder-gray-400 outline-none transition focus:border-ewha-600 focus:ring-2 focus:ring-ewha-100"
+          />
+          <p className="mt-1 text-xs text-gray-400">이메일은 제출 후 공개되지 않습니다.</p>
         </div>
 
         {/* 질문 내용 */}
